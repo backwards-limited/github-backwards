@@ -91,7 +91,7 @@ bf88e1b (HEAD -> oldies, main) Add 2 ABBA songs
 9287a04 Add new playlist header
 ```
 
-However, `checkout` is being deprecated in favour of `switch` e.g.
+However, in this case, `switch` is preferred over `checkout` e.g.
 ```shell
 git switch main
 Switched to branch 'main'
@@ -121,3 +121,80 @@ git log --oneline
 bf88e1b (main) Add 2 ABBA songs
 9287a04 Add new playlist header
 ```
+
+## Add and Commit at the Same Time
+
+On the `oldies` branch we add two more songs:
+```shell
+> cat >> playlist.txt <<EOF
+> My Sweet Lord - George Harrison
+> What is Life - George Harrison
+> EOF
+```
+
+Then add and commit at the same time:
+```shell
+git commit -am "Add 2 George Harrison songs"
+```
+
+## Switching Branches
+
+Where are we?
+```shell
+git log --oneline
+d3a090a (HEAD -> oldies) Add 2 George Harrison songs
+97f3a1d Add two songs by George Jones
+bf88e1b (main) Add 2 ABBA songs
+9287a04 Add new playlist header
+```
+
+`HEAD` is pointing at `oldies`. Make a new `georges` branch:
+```shell
+git branch georges
+
+git log --oneline 
+d3a090a (HEAD -> oldies, georges) Add 2 George Harrison songs
+97f3a1d Add two songs by George Jones
+bf88e1b (main) Add 2 ABBA songs
+9287a04 Add new playlist header
+```
+
+We see the new branch, though HEAD still points at `oldies` - Let's switch:
+```shell
+git switch georges
+Switched to branch 'georges'
+
+git log --oneline
+d3a090a (HEAD -> georges, oldies) Add 2 George Harrison songs
+97f3a1d Add two songs by George Jones
+bf88e1b (main) Add 2 ABBA songs
+9287a04 Add new playlist header
+```
+
+`HEAD` now points at `georges` - Let's switch back to `oldies`:
+```shell
+git switch oldies
+Switched to branch 'oldies'
+
+git log --oneline
+d3a090a (HEAD -> oldies, georges) Add 2 George Harrison songs
+97f3a1d Add two songs by George Jones
+bf88e1b (main) Add 2 ABBA songs
+9287a04 Add new playlist header
+```
+
+And indeed, `HEAD` points back a `oldies`.
+
+## Create and Switch at the Same Time
+
+```shell
+git switch -c <branch-name>
+```
+where `-c` stands for "create".
+
+If you were to use `checkout` then:
+````shell
+git checkout -b <branch-name>
+````
+
+## Deleting and Renaming Branches
