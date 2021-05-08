@@ -132,7 +132,7 @@ On the `oldies` branch we add two more songs:
 > EOF
 ```
 
-Then add and commit at the same time:
+Then add and commit at the same time (which can be done for any non-new files):
 ```shell
 git commit -am "Add 2 George Harrison songs"
 ```
@@ -197,4 +197,59 @@ If you were to use `checkout` then:
 git checkout -b <branch-name>
 ````
 
-## Deleting and Renaming Branches
+## Renaming Branches
+
+Create a branch, then on said branch we can rename:
+```shell
+git switch -c to-rename
+Switched to a new branch 'to-rename'
+
+git branch -m new-name
+
+git log --oneline
+d3a090a (HEAD -> new-name, oldies, georges) Add 2 George Harrison songs
+```
+
+## How Git Stores HEAD and Branches
+
+Within the `.git` directory there is a file named `HEAD`:
+```shell
+road-trip-play-list on  new-name 
+cat .git/HEAD
+ref: refs/heads/new-name
+```
+
+```shell
+road-trip-play-list on  new-name 
+git switch main
+Switched to branch 'main'
+
+road-trip-play-list on  main 
+cat .git/HEAD  
+ref: refs/heads/main
+```
+
+And what is `refs/heads/main` and `refs/heads/new-name` etc.?
+There is a file such as `main` for every branch under the directory `refs/heads` and each file has the latest commit for its branch:
+```shell
+ls -las .git/refs/heads
+total 32
+0 drwxr-xr-x  6 davidainslie  staff  192 Apr 24 21:56 .
+0 drwxr-xr-x  4 davidainslie  staff  128 Apr 19 22:24 ..
+8 -rw-r--r--  1 davidainslie  staff   41 Apr 23 21:47 georges
+8 -rw-r--r--  1 davidainslie  staff   41 Apr 19 22:33 main
+8 -rw-r--r--  1 davidainslie  staff   41 Apr 24 21:56 new-name
+8 -rw-r--r--  1 davidainslie  staff   41 Apr 23 21:43 oldies
+```
+
+```shell
+cat .git/refs/heads/main
+bf88e1b1e248b595589bed70de6ab5f8e2f232cf
+```
+
+Double check that commit:
+```shell
+git log --oneline
+bf88e1b (HEAD -> main) Add 2 ABBA songs
+9287a04 Add new playlist header
+```
