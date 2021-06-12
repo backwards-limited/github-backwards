@@ -162,3 +162,157 @@ aced795 Add podcasts file
 41cfb09 Add 2 ABBA songs
 b9d521b Add songs file
 ```
+
+## Merge Conflict
+
+When you encounter a merge conflict, Git warns you in the console that it could not automatically merge.
+**It also changes the contents of your files to indicate the conflicts that it wants you to resolve.**
+
+Within a file we could see something like the following, where we are on say `main` and we are currently at `HEAD` of the `main` branch and what is being merged in is a branch named `bug-fix` and so do we keep what we currently have at the top, or take what is being merged in at the bottome, or a combination?
+```text
+<<<<<<< HEAD
+I have 2 cats
+I also have chickens
+=======
+I used to have a dog
+>>>>>>> bug-fix
+```
+
+So, the contents from the branch you are trying to merge from is displayed between the `=======` and `>>>>>>>` symbols.
+
+Resolving conflicts steps:
+- Open the file(s) with merge conflicts
+- Edit the file(s) to remove the conflicts; decide which branch's contents you want to keep in each conflict; or keep the content from both
+- Remove the conflict "markers" in the document
+- Add your changes, and then make a commit
+
+## Merge Conflict Example
+
+We'll carry on from the previous `playlist` repository, though first just get rid of the `ABBA` branch that was merged in, and we'll work on 2 branches to show a merge conflict.
+
+```shell
+git branch -d ABBA
+
+git switch -c serena
+
+git switch main  
+
+git switch -c bjorn
+```
+
+Current state of play is:
+![Creating merge conflict](images/creating-merge-conflict.jpg)
+
+First Bjorn changes file `songs.txt`:
+```shell
+vim songs.txt
+```
+
+```text
+Dancing Queen - ABBA 
+Minimum Brain Size - King Gizzard & The Lizard Wizard
+```
+
+```shell
+git add songs.txt
+git commit -m "Add KGLW song"
+```
+
+Bjorn adds 2 more songs on another commit:
+```shell
+vim songs.txt
+```
+
+```text
+Dancing Queen - ABBA 
+Minimum Brain Size - King Gizzard & The Lizard Wizard 
+The Adults Are Talking - The Strokes 
+Last Nite - The Strokes
+```
+
+```shell
+git add songs.txt 
+git commit -m "Add 2 Strokes songs"
+```
+
+Meanwhile, Serena adds another ABBA song:
+```shell
+git switch serena
+```
+
+```shell
+vim songs.txt
+```
+
+```text
+SOS - ABBA 
+One Of Us - ABBA 
+Mamma Mia - ABBA 
+Dancing Queen - ABBA 
+Gimme Gimme - ABBA
+```
+
+```shell
+git add songs.txt 
+git commit -m "Add 1 ABBA song"
+```
+
+Let's just add one more song for Serena:
+```shell
+vim songs.txt
+```
+
+```text
+SOS - ABBA 
+One Of Us - ABBA 
+Mamma Mia - ABBA 
+Dancing Queen - ABBA 
+Gimme Gimme - ABBA 
+Here You Come Again - Dolly Parton
+```
+
+```shell
+git add songs.txt 
+git commit -m "Add 1 Dolly Parton song"
+```
+
+Current status is:
+![Current status](images/creating-merge-conflict-status.jpg)
+
+GitKraken can show up the whole picture, though we can see most of the picture from a branch e.g.
+```shell
+git log --oneline --graph
+* 1a6ba30 (HEAD -> serena) Add 1 Dolly Parton song
+* 3410200 Add 1 ABBA song
+*   b5118f1 (main) Merge branch 'ABBA'
+|\  
+| * 6f466b3 Add Dancing Queen
+| * 19c4d9f Add Mamma Mia
+* | 9f586c3 Add 3 podcasts
+* | aced795 Add podcasts file
+|/  
+* 41cfb09 Add 2 ABBA songs
+* b9d521b Add songs file
+```
+
+Let's switch to Bjorn's branch and from there create a new branch named `combo` and merge in Serena's branch into `combo`:
+```shell
+git switch bjorn
+
+git switch -c combo
+
+git merge serena
+Auto-merging songs.txt
+CONFLICT (content): Merge conflict in songs.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Aha! Let's fix.
+
+```shell
+code songs.txt
+```
+
+This time I use Visual Studio Code as it helps out with resolving merge conflicts:
+
+![Resolve](images/resolve-merge-conflict.jpg)
